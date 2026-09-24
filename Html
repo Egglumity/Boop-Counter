@@ -21,23 +21,33 @@ transition: box-shadow 0.2s ease;
 "
 >
 
-<div style="text-align: left; line-height: 1.2;">
-<div id="boop-count" style="
-font-size: 1.8rem;
-font-weight: 700;
-color: #E5CCEB;
-text-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
-margin-top: 2px;
-transition: transform 0.15s ease;
-">0</div>
-<div style="font-size: 0.8rem;
-font-weight: 400;
-color: #E5CCEB;
-text-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
-margin-top: 2px;
-opacity: 0.9;">
-Boops 👆
-</div>
+<div style="text-align:left; line-height:1.2; width:75px;">
+  <div id="boop-count" style="
+    width:75px;
+    box-sizing:border-box;
+    font-size:1.8rem;
+    font-weight:700;
+    color:#E5CCEB;
+    text-align:center;
+    font-variant-numeric:tabular-nums;
+    white-space:nowrap;
+    text-shadow:0 2px 6px rgba(0,0,0,.35);
+    margin-top:2px;
+    transition:transform .15s ease;
+  ">0</div>
+
+  <div style="
+    font-size:.8rem;
+    font-weight:400;
+    color:#E5CCEB;
+    text-align:center;
+    white-space:nowrap;
+    text-shadow:0 2px 6px rgba(0,0,0,.35);
+    margin-top:2px;
+    opacity:.9;
+  ">
+    Boops 👆
+  </div>
 </div>
 </div>
 
@@ -55,73 +65,87 @@ animation: boop-bounce 0.45s ease;
 </style>
 
 <script>
-(function() {
-  const KEY = 'key-carrd-boops'; // <--- Change this to your unique key
-  const IMG = 'https://eggwuh.net/assets/images/image01.gif'; <--- Make this your custom image
+(function () {
+  const KEY = 'gwuhgwuh-carrd-boops';
+  const IMG = 'https://eggwuh.net/assets/images/image01.gif';
   const API = 'https://countapi.mileshilliard.com/api/v1';
 
-  function init() {
-    const countEl = document.getElementById('boop-count');
-    const imgEl = document.getElementById('boop-img');
-    const widget = document.getElementById('boop-widget');
+  const widget = document.getElementById('boop-widget');
+  const countEl = document.getElementById('boop-count');
+  const imgEl = document.getElementById('boop-img');
 
-    if (!countEl || !imgEl || !widget) {
-      console.error('Boop elements not found');
-      return;
-    }
+  if (!widget || !countEl || !imgEl) {
+    console.error('Boop elements not found');
+    return;
+  }
 
-    imgEl.src = IMG;
+  let count = 0;
+  let pending = false;
 
-    const url = API + '/get/' +
-      encodeURIComponent(KEY);
+  function setCount(value) {
+    count = Number(value) || 0;
+    countEl.textContent = count;
+  }
 
-    fetch(url)
-      .then(function(response) {
+  function loadCount() {
+    fetch(API + '/get/' + encodeURIComponent(KEY))
+      .then(function (response) {
         if (!response.ok) {
-          throw new Error('CountAPI returned HTTP ' + response.status);
+          throw new Error('CountAPI get failed: ' + response.status);
         }
         return response.json();
       })
-      .then(function(data) {
+      .then(function (data) {
         if (data && data.value !== undefined) {
-          countEl.textContent = data.value;
+          setCount(data.value);
         }
       })
-      .catch(function(error) {
-        console.error('Failed to load count:', error);
+      .catch(function (err) {
+        console.warn('Could not load count:', err);
       });
-
-    widget.addEventListener('click', function() {
-      imgEl.classList.remove('bounce');
-      void imgEl.offsetWidth;
-      imgEl.classList.add('bounce');
-
-      countEl.style.transform = 'scale(1.2)';
-      setTimeout(function() {
-        countEl.style.transform = 'scale(1)';
-      }, 150);
-
-      const hitUrl = API + '/hit/' +
-        encodeURIComponent(KEY);
-
-      fetch(hitUrl)
-        .then(function(response) {
-          if (!response.ok) {
-            throw new Error('CountAPI returned HTTP ' + response.status);
-          }
-          return response.json();
-        })
-        .then(function(data) {
-          if (data && data.value !== undefined) {
-            countEl.textContent = data.value;
-          }
-        })
-        .catch(function(error) {
-          console.error('Failed to increment count:', error);
-        });
-    });
   }
 
-  init();
+  function boop() {
+    if (pending) return;
+    pending = true;
+
+    imgEl.classList.remove('boop');
+    void imgEl.offsetWidth;
+    imgEl.classList.add('boop');
+
+    setCount(count + 1);
+
+    fetch(API + '/hit/' + encodeURIComponent(KEY))
+      .then(function (response) {
+        if (!response.ok) {
+          throw new Error('CountAPI hit failed: ' + response.status);
+        }
+        return response.json();
+      })
+      .then(function (data) {
+        if (data && data.value !== undefined) {
+          setCount(data.value);
+        }
+      })
+      .catch(function (err) {
+        console.warn('Could not update count:', err);
+      })
+      .finally(function () {
+        pending = false;
+      });
+  }
+
+  imgEl.src = IMG;
+
+  widget.addEventListener('click', boop);
+
+  widget.addEventListener('keydown', function (event) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      boop();
+    }
+  });
+
+  loadCount();
 })();
 </script>
