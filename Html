@@ -8,7 +8,7 @@ font-family: 'Inter', system-ui, -apple-system, sans-serif;
 ">
 <img
 id="boop-img"
-src="https://eggwuh.net/assets/images/image01.gif"
+src="https://eggwuh.net/assets/images/image01.gif" // <--- Make this your custom image
 alt="Boop"
 style="
 width: 400px;
@@ -57,7 +57,7 @@ animation: boop-bounce 0.45s ease;
 <script>
 (function() {
   const KEY = 'key-carrd-boops'; // <--- Change this to your unique key
-  const IMG = 'https://eggwuh.net/assets/images/image01.gif';
+  const IMG = 'https://eggwuh.net/assets/images/image01.gif'; <--- Make this your custom image
   const API = 'https://countapi.mileshilliard.com/api/v1';
 
   function init() {
@@ -102,7 +102,6 @@ animation: boop-bounce 0.45s ease;
       }, 150);
 
       const hitUrl = API + '/hit/' +
-        encodeURIComponent(NAMESPACE) + '/' +
         encodeURIComponent(KEY);
 
       fetch(hitUrl)
