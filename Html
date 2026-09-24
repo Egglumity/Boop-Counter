@@ -56,53 +56,75 @@ animation: boop-bounce 0.45s ease;
 
 <script>
 (function() {
-// ── CHANGE THESE ──────────────────────────────────────
-const KEY = 'gwuhgwuh-carrd-boops'; // make this unique!
-const IMG = 'https://eggwuh.net/assets/images/image01.gif'; // your image URL
-// ─────────────────────────────────────────────────────
+  const NAMESPACE = 'eggwuh';
+  const KEY = 'gwuhgwuh-carrd-boops';
+  const IMG = 'https://eggwuh.net/assets/images/image01.gif';
+  const API = 'https://countapi.mileshilliard.com/api/v1';
 
-const API = 'https://countapi.mileshilliard.com/api/v1';
+  function init() {
+    const countEl = document.getElementById('boop-count');
+    const imgEl = document.getElementById('boop-img');
+    const widget = document.getElementById('boop-widget');
 
-function init() {
-const countEl = document.getElementById('boop-count');
-const imgEl = document.getElementById('boop-img');
-const widget = document.getElementById('boop-widget');
+    if (!countEl || !imgEl || !widget) {
+      console.error('Boop elements not found');
+      return;
+    }
 
-if (!countEl || !imgEl || !widget) {
-console.error('Boop elements not found');
-return;
-}
+    imgEl.src = IMG;
 
-imgEl.src = IMG;
+    const url = API + '/get/' +
+      encodeURIComponent(NAMESPACE) + '/' +
+      encodeURIComponent(KEY);
 
-// Always show something immediately
-countEl.textContent = '0';
+    fetch(url)
+      .then(function(response) {
+        if (!response.ok) {
+          throw new Error('CountAPI returned HTTP ' + response.status);
+        }
+        return response.json();
+      })
+      .then(function(data) {
+        if (data && data.value !== undefined) {
+          countEl.textContent = data.value;
+        }
+      })
+      .catch(function(error) {
+        console.error('Failed to load count:', error);
+      });
 
-// Load real count
-fetch(API + '/get/' + encodeURIComponent(KEY))
-.then(function(r) { return r.json(); })
-.then(function(data) {
-if (data && data.value !== undefined) {
-countEl.textContent = data.value;
-}
-})
-.catch(function(err) {
-console.error('Failed to load count:', err);
-countEl.textContent = '0';
-});
+    widget.addEventListener('click', function() {
+      imgEl.classList.remove('bounce');
+      void imgEl.offsetWidth;
+      imgEl.classList.add('bounce');
 
-// Click to increment
-widget.addEventListener('click', function() {
-// Bounce animation
-imgEl.classList.remove('bounce');
-void imgEl.offsetWidth;
-imgEl.classList.add('bounce');
+      countEl.style.transform = 'scale(1.2)';
+      setTimeout(function() {
+        countEl.style.transform = 'scale(1)';
+      }, 150);
 
-// Number pop
-countEl.style.transform = 'scale(1.2)';
-setTimeout(function() {
-countEl.style.transform = 'scale(1)';
-}, 150);
+      const hitUrl = API + '/hit/' +
+        encodeURIComponent(NAMESPACE) + '/' +
+        encodeURIComponent(KEY);
 
-// Hit the API
-fetch(API + '/hit/' + encodeURIComponent(KEY))
+      fetch(hitUrl)
+        .then(function(response) {
+          if (!response.ok) {
+            throw new Error('CountAPI returned HTTP ' + response.status);
+          }
+          return response.json();
+        })
+        .then(function(data) {
+          if (data && data.value !== undefined) {
+            countEl.textContent = data.value;
+          }
+        })
+        .catch(function(error) {
+          console.error('Failed to increment count:', error);
+        });
+    });
+  }
+
+  init();
+})();
+</script>
