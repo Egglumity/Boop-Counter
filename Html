@@ -56,7 +56,6 @@ animation: boop-bounce 0.45s ease;
 
 <script>
 (function() {
-  const NAMESPACE = 'eggwuh';
   const KEY = 'gwuhgwuh-carrd-boops';
   const IMG = 'https://eggwuh.net/assets/images/image01.gif';
   const API = 'https://countapi.mileshilliard.com/api/v1';
@@ -74,7 +73,6 @@ animation: boop-bounce 0.45s ease;
     imgEl.src = IMG;
 
     const url = API + '/get/' +
-      encodeURIComponent(NAMESPACE) + '/' +
       encodeURIComponent(KEY);
 
     fetch(url)
