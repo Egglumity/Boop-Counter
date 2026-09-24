@@ -66,9 +66,9 @@ animation: boop-bounce 0.45s ease;
 
 <script>
 (function () {
-  const KEY = 'gwuhgwuh-carrd-boops'; // Change key to your unique key
-  const IMG = 'https://eggwuh.net/assets/images/image01.gif';
-  const API = 'https://countapi.mileshilliard.com/api/v1';
+//  const KEY = 'gwuhgwuh-carrd-boops'; // Change key to your unique key
+//  const IMG = 'https://eggwuh.net/assets/images/image01.gif';
+//  const API = 'https://countapi.mileshilliard.com/api/v1';
 
   const widget = document.getElementById('boop-widget');
   const countEl = document.getElementById('boop-count');
@@ -88,7 +88,7 @@ animation: boop-bounce 0.45s ease;
   }
 
   function loadCount() {
-    fetch(https://countapi.mileshilliard.com/api/v1/get/gwuhgwuh-carrd-boops)
+    fetch('https://countapi.mileshilliard.com/api/v1/get/gwuhgwuh-carrd-boops')
       .then(function (response) {
         if (!response.ok) {
           throw new Error('CountAPI get failed: ' + response.status);
@@ -115,7 +115,7 @@ animation: boop-bounce 0.45s ease;
 
     setCount(count + 1);
 
-    fetch(https://countapi.mileshilliard.com/api/v1/hit/gwuhgwuh-carrd-boops)
+    fetch('https://countapi.mileshilliard.com/api/v1/hit/gwuhgwuh-carrd-boops')
       .then(function (response) {
         if (!response.ok) {
           throw new Error('CountAPI hit failed: ' + response.status);
