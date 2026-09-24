@@ -1,29 +1,28 @@
 <div id="boop-widget" style="
   display:inline-flex;
   align-items:center;
-  gap:1rem;
-  width:490px;
-  box-sizing:border-box;
+  gap:16px;
+  width:max-content;
   cursor:pointer;
   user-select:none;
   font-family:'Inter',system-ui,-apple-system,sans-serif;
 ">
 <img
-id="boop-img"
-src="https://eggwuh.net/assets/images/image01.gif"
-alt="Boop"
-style="
-width: 400px;
-height: 400px;
-border-radius: 75%;
-object-fit: cover;
-border: 6px solid #ff6b9d;
-box-shadow: 0 4px 12px rgba(255, 107, 157, 0.3);
-transition: box-shadow 0.2s ease;
-"
+  id="boop-img"
+  src="https://eggwuh.net/assets/images/image01.gif"
+  alt="Boop"
+  style="
+    width:400px;
+    height:400px;
+    flex:0 0 400px;
+    border-radius:75%;
+    object-fit:cover;
+    border:6px solid #ff6b9d;
+    box-shadow:0 4px 12px rgba(255,107,157,.3);
+  "
 >
 
-<div style="text-align:left; line-height:1.2; width:75px;">
+<div style="text-align:center; line-height:1.2; width:100px; flex:0 0 100px;">
   <div id="boop-count" style="
     width:100px;
     box-sizing:border-box;
@@ -38,18 +37,17 @@ transition: box-shadow 0.2s ease;
     transition:transform .15s ease;
   ">0</div>
 
-  <div style="
+ <div style="
     font-size:.8rem;
     font-weight:400;
     color:#E5CCEB;
     text-align:center;
     white-space:nowrap;
+    color:#E5CCEB;
     text-shadow:0 2px 6px rgba(0,0,0,.35);
     margin-top:2px;
     opacity:.9;
-  ">
-    Boops 👆
-  </div>
+  ">Boops 👆</div>
 </div>
 </div>
 
@@ -111,9 +109,9 @@ animation: boop-bounce 0.45s ease;
     if (pending) return;
     pending = true;
 
-    imgEl.classList.remove('boop');
+    imgEl.classList.remove('bounce');
     void imgEl.offsetWidth;
-    imgEl.classList.add('boop');
+    imgEl.classList.add('bounce');
 
     setCount(count + 1);
 
