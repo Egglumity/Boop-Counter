@@ -105,6 +105,8 @@ const API = 'https://countapi.mileshilliard.com/api/v1';
   }
 
   function boop() {
+    console.log('Boop clicked');
+    
     if (pending) return;
     pending = true;
 
@@ -136,7 +138,7 @@ const API = 'https://countapi.mileshilliard.com/api/v1';
 
   imgEl.src = IMG;
 
-  widget.addEventListener('click', boop);
+  imgEl.addEventListener('click', boop);
 
   widget.addEventListener('keydown', function (event) {
     if (event.key === 'Enter' || event.key === ' ') {
