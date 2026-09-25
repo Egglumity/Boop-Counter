@@ -1,4 +1,4 @@
-<div id="boop-widget" style="
+<div id="boop-widget" tabindex="0" role="button" aria-label="Boop" style="
   display:inline-flex;
   align-items:center;
   gap:16px;
@@ -15,7 +15,7 @@
     width:400px;
     height:400px;
     flex:0 0 400px;
-    border-radius:75%;
+    border-radius:50%;
     object-fit:cover;
     border:6px solid #ff6b9d;
     box-shadow:0 4px 12px rgba(255,107,157,.3);
@@ -65,6 +65,9 @@ animation: boop-bounce 0.45s ease;
 
 <script>
 (function () {
+
+console.log('Boop script loaded');
+
 const KEY = 'gwuhgwuh-carrd-boops'; // Change key to your unique key
 const IMG = 'https://eggwuh.net/assets/images/image01.gif';
 const API = 'https://countapi.mileshilliard.com/api/v1';
@@ -114,6 +117,7 @@ const API = 'https://countapi.mileshilliard.com/api/v1';
     void imgEl.offsetWidth;
     imgEl.classList.add('bounce');
 
+    const previous = count;
     setCount(count + 1);
 
     fetch(API + '/hit/' + encodeURIComponent(KEY))
@@ -130,13 +134,12 @@ const API = 'https://countapi.mileshilliard.com/api/v1';
       })
       .catch(function (err) {
         console.warn('Could not update count:', err);
+        setCount(previous);
       })
       .finally(function () {
         pending = false;
       });
   }
-
-  imgEl.src = IMG;
 
   imgEl.addEventListener('click', boop);
 
